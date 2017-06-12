@@ -1,13 +1,14 @@
 const express = require('express');
 const hbs = require('hbs');
 const fs = require('fs');
+const favicon = require('serve-favicon');
 
 let app = express();
 const port = 3000;
+let maintenanceMode = true;
 
 hbs.registerPartials(__dirname + '/views/partials');
 app.set('view engine', 'hbs');
-app.use(express.static(__dirname + '/public'));
 
 app.use((req, res, next) => {
   const line = `${ req.method } ${ req.url }`;
@@ -15,6 +16,17 @@ app.use((req, res, next) => {
 
   next();
 });
+
+app.use((req, res, next) => {
+    if (maintenanceMode) {
+        res.render('maintenance.hbs');
+    } else {
+        next();
+    }
+});
+
+app.use(express.static(__dirname + '/public'));
+app.use(favicon(__dirname + '/public/favicon.ico'));
 
 hbs.registerHelper('getCurrentYear', () => new Date().getFullYear());
 hbs.registerHelper('screamIt', txt => txt.toUpperCase());
