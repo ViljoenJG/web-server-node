@@ -4,8 +4,8 @@ const fs = require('fs');
 const favicon = require('serve-favicon');
 
 let app = express();
-const port = 3000;
-let maintenanceMode = true;
+const port = process.env.PORT || 3000;
+let maintenanceMode = false;
 
 hbs.registerPartials(__dirname + '/views/partials');
 app.set('view engine', 'hbs');
