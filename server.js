@@ -1,5 +1,6 @@
 const express = require('express');
 const hbs = require('hbs');
+const fs = require('fs');
 
 let app = express();
 const port = 3000;
@@ -9,9 +10,9 @@ app.set('view engine', 'hbs');
 app.use(express.static(__dirname + '/public'));
 
 app.use((req, res, next) => {
-  const now = new Date().toString();
+  const line = `${ req.method } ${ req.url }`;
+  log(line);
 
-  console.log(`${ now } - ${ req.method } ${ req.url }`);
   next();
 });
 
@@ -39,5 +40,15 @@ app.get('/bad', function (req, res) {
 });
 
 app.listen(port, () => {
-  console.log(`Server is up on port ${ port }`);
+  log(`Server is up on port ${ port }`)
 });
+
+function log(msg, level = 'info') {
+    const now = new Date().toString();
+    const line = `[${ level.toUpperCase() }] ${ now }: ${ msg }`;
+
+    console.log(line);
+    fs.appendFile(__dirname + '/out/server.log', `${line}\n`, (err) => {
+        if (err) console.log('Unable to append to server log: ', JSON.stringify(err, undefined, 2));
+    });
+}
