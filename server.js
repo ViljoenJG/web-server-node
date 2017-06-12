@@ -60,7 +60,7 @@ function log(msg, level = 'info') {
     const line = `[${ level.toUpperCase() }] ${ now }: ${ msg }`;
 
     console.log(line);
-    fs.appendFile(__dirname + '/out/server.log', `${line}\n`, (err) => {
+    fs.appendFile(__dirname + 'server.log', `${line}\n`, (err) => {
         if (err) console.log('Unable to append to server log: ', JSON.stringify(err, undefined, 2));
     });
 }
